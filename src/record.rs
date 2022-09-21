@@ -1,5 +1,6 @@
 
 
+#[derive(Deserialize)]
 enum RecordType
 {
     Deposit,
@@ -11,6 +12,7 @@ enum RecordType
     Finished
 }
 
+#[derive(Deserialize)]
 pub struct Record
 {
     record_type: RecordType,
