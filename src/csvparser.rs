@@ -13,7 +13,7 @@ impl CSVParser {
         let args: Vec<String> = env::args().collect();
 
         // let's make sure we get at least a single input file
-        assert!(args.len() > 1);
+        assert!(args.len() > 1, "You need to provide a path as an argument to a csv file to get the data from");
 
         let result = args[1].clone();
 
