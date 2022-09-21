@@ -33,10 +33,7 @@ impl CSVParser {
         let mut reader = ReaderBuilder::new().trim(Trim::All).from_path(&input_filename).unwrap();
 
         reader.deserialize::<Record>().for_each(|record| {
-            if !record.is_err()
-            {
-                self.sender.send(record.unwrap()).unwrap();
-            }
+            self.sender.send(record.unwrap_or(Record::default())).unwrap();
         });
 
 

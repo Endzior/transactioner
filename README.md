@@ -7,6 +7,8 @@ This repository contains an assignment solution by one of the companies. This re
 
 As stated in the provided coding document - a dispute should decrease available and increase held. It would make no sense if a Dispute could be filed on a Withdrawal - because then we would have magic money being detracted yet again.
 
+## Dispute can lead to a a sitatuion of negative available funds
+
 ## Chargeback can lead to a situation of negative available funds
 
 If such situation occurs for a single account:

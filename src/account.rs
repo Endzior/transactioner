@@ -30,17 +30,21 @@ impl Account {
 
     pub fn process(&mut self, record: Record)
     {
+        let log_header = "Account::process";
         if self.locked
         {
+            log::debug!("{}: Account is locked, record == {}", log_header, &record);
             return
         }
 
         if !self.process_record(&record)
         {
+            log::debug!("{}: record could not've been processed, record == {}", log_header, &record);
             return
         }
 
         let collection = if record.record_type == RecordType::Dispute || record.record_type == RecordType::Resolve { &mut self.disputes } else { &mut self.transactions };
+        log::debug!("{}: Record has been processed - inserting into collection, record == {}", log_header, &record);
         collection.insert(record.trx_id, record);
     }
 
@@ -59,67 +63,102 @@ impl Account {
 
     fn deposit(&mut self, record: &Record) -> bool
     {
-        self.available += record.amount.unwrap();
+        let log_header = "Account::deposit";
+        if record.amount.is_none()
+        {
+            log::debug!("{}: amount in record is None, skipping", log_header);
+            return false
+        }
+
+        let amount = record.amount.unwrap();
+        log::debug!("{}: old available == {}, new available == {}", log_header, self.available, self.available + amount);
+        self.available += amount;
         true
     }
 
     fn withdrawal(&mut self, record: &Record) -> bool
     {
-        let amount = record.amount.unwrap();
-        if self.available - amount < 0.
+        let log_header = "Account::deposit";
+        if record.amount.is_none()
         {
+            log::debug!("{}: amount in record is None, skipping", log_header);
             return false
         }
 
+        let log_header = "Account::withdrawal";
+        let amount = record.amount.unwrap();
+        if self.available - amount < 0.
+        {
+            log::debug!("{}: available is smaller then supplied amount, available == {}, amount == {}", log_header, self.available, amount);
+            return false
+        }
+
+        log::debug!("{}: old available == {}, new available == {}", log_header, self.available, self.available - amount);
         self.available -= amount;
         true
     }
 
     fn dispute(&mut self, record: &Record) -> bool
     {
+        let log_header = "Account::dispute";
         let deposited = self.transactions.get(&record.trx_id);
         
         if deposited.is_none() || deposited.unwrap().record_type != RecordType::Deposit
         {
+            log::debug!("{}: deposited transaction not found", log_header);
             return false
         }
 
+        log::debug!("{}: deposited transaction found, will change available and held amounts", log_header);
         let amount = deposited.unwrap().amount.unwrap();
+        log::debug!("{}: old available == {}, new available == {}", log_header, self.available, self.available - amount);
         self.available -= amount;
+        log::debug!("{}: old held == {}, new held == {}", log_header, self.held, self.held + amount);
         self.held += amount;
         true
     }
 
     fn resolve(&mut self, record: &Record) -> bool
     {
+        let log_header = "Account::resolve";
         let disputed = self.disputes.get(&record.trx_id);
 
         if disputed.is_none() || disputed.unwrap().record_type != RecordType::Dispute
         {
+            log::debug!("{}: disputed transaction not found", log_header);
             return false;
         }
 
+        log::debug!("{}: disputed transaction found, will change available and held amounts", log_header);
         // if a dispute was added -> it was already checked the deposited has correct RecordType
         let deposited = self.transactions.get(&disputed.unwrap().trx_id);
         let amount = deposited.unwrap().amount.unwrap();
 
+        log::debug!("{}: old available == {}, new available == {}", log_header, self.available, self.available + amount);
         self.available += amount;
+        log::debug!("{}: old held == {}, new held == {}", log_header, self.held, self.held - amount);
         self.held -= amount;
         true
     }
 
     fn chargeback(&mut self, record: &Record) -> bool
     {
+        let log_header = "Account::chargeback";
+
         let disputed = self.disputes.get(&record.trx_id);
 
         if disputed.is_none() || disputed.unwrap().record_type != RecordType::Dispute 
         {
+            log::debug!("{}: disputed transaction not found", log_header);
             return false;
         }
 
+        log::debug!("{}: disputed transaction found, will change available and held amounts", log_header);
         let deposited = self.transactions.get(&disputed.unwrap().trx_id);
 
+        log::debug!("{}: old held == {}, new held == {}", log_header, self.held, self.held - deposited.unwrap().amount.unwrap());
         self.held -= deposited.unwrap().amount.unwrap();
+        log::debug!("{}: locking this Account", log_header);
         self.locked = true;
         true
     }

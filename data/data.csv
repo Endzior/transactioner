@@ -16,6 +16,6 @@ dispute, 4, 10,
 dispute, 4, 9, 
 chargeback, 4, 9, 
 deposit, 4, 11, 10000
-dispute, 5, 12
+dispute, 5, 12,
 deposit, 5, 12, 100
 dispute, 5, 12, 
