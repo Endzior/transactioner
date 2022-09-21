@@ -1,6 +1,6 @@
 use std::env;
 
-use csv::ReaderBuilder;
+use csv::{ReaderBuilder, Trim};
 
 use crate::{record::{Record, RecordType}, calculator::Calculator};
 
@@ -30,7 +30,7 @@ impl CSVParser {
     {
         let input_filename = self.read_filename_from_args();
 
-        let mut reader = ReaderBuilder::new().from_path(&input_filename).unwrap();
+        let mut reader = ReaderBuilder::new().trim(Trim::All).from_path(&input_filename).unwrap();
 
         reader.deserialize::<Record>().for_each(|record| {
             if !record.is_err()
