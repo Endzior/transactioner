@@ -19,11 +19,11 @@ pub struct Record
     #[serde(rename = "type")]
     pub record_type: RecordType,
     #[serde(rename = "client")]
-    client_id: u16,
+    pub client_id: u16,
     #[serde(rename = "tx")]
-    trx_id: u16,
+    pub trx_id: u16,
     #[serde(rename = "amount")]
-    amount: Option<f64>
+    pub amount: Option<f64>
 }
 
 impl Record

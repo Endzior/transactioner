@@ -11,7 +11,7 @@ pub struct CSVParser {
 impl CSVParser {
     pub fn default() -> Self
     {
-        Self { calculator: Calculator {}}
+        Self { calculator: Calculator::default() }
     }
 
     fn read_filename_from_args(&self) -> String
@@ -26,7 +26,7 @@ impl CSVParser {
         return result;
     }
 
-    pub fn parse_records(&self)
+    pub fn parse_records(&mut self)
     {
         let input_filename = self.read_filename_from_args();
 

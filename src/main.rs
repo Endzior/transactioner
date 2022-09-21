@@ -1,10 +1,11 @@
 use csvparser::CSVParser;
 
+mod account;
+mod calculator;
 mod csvparser;
 mod record;
-mod calculator;
 
 fn main() {
-    let parser = CSVParser::default();
+    let mut parser = CSVParser::default();
     parser.parse_records();
 }
