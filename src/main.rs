@@ -17,13 +17,22 @@ fn main() {
     let (sender, receiver) = channel::<Record>();
 
     let join_thread = std::thread::spawn(move || {
-        log::debug!("{}::thread: creating new Engine and calling run on it", log_header);
+        log::debug!(
+            "{}::thread: creating new Engine and calling run on it",
+            log_header
+        );
         calculator::Calculator::new(receiver).run();
     });
 
-    log::debug!("{}: creating inplace a new CSVReader and calling read_file on it", log_header);
+    log::debug!(
+        "{}: creating inplace a new CSVReader and calling read_file on it",
+        log_header
+    );
     CSVParser::new(sender).parse_records();
 
-    log::debug!("{}: calling join_thread on the created thread, will wait for Engine to finish processing", log_header);
+    log::debug!(
+        "{}: calling join_thread on the created thread, will wait for Engine to finish processing",
+        log_header
+    );
     let _ = join_thread.join();
 }

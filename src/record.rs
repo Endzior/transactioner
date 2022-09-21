@@ -2,8 +2,7 @@ use serde::Deserialize;
 
 #[derive(Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
-pub enum RecordType
-{
+pub enum RecordType {
     Deposit,
     Withdrawal,
     Dispute,
@@ -12,12 +11,11 @@ pub enum RecordType
     #[serde(skip_deserializing)]
     Invalid,
     #[serde(skip_deserializing)]
-    Finished
+    Finished,
 }
 
 #[derive(Deserialize)]
-pub struct Record
-{
+pub struct Record {
     #[serde(rename = "type")]
     pub record_type: RecordType,
     #[serde(rename = "client")]
@@ -25,14 +23,17 @@ pub struct Record
     #[serde(rename = "tx")]
     pub trx_id: u16,
     #[serde(rename = "amount")]
-    pub amount: Option<f64>
+    pub amount: Option<f64>,
 }
 
-impl Record
-{
-    pub fn default() -> Self
-    {
-        Self { record_type: RecordType::Invalid, client_id: u16::MAX, trx_id: u16::MAX, amount: None }
+impl Record {
+    pub fn default() -> Self {
+        Self {
+            record_type: RecordType::Invalid,
+            client_id: u16::MAX,
+            trx_id: u16::MAX,
+            amount: None,
+        }
     }
 }
 
@@ -52,6 +53,10 @@ impl std::fmt::Display for RecordType {
 
 impl std::fmt::Display for Record {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}, {:?}, {:?}, {:?}", self.record_type, self.client_id, self.trx_id, self.amount)
+        write!(
+            f,
+            "{}, {:?}, {:?}, {:?}",
+            self.record_type, self.client_id, self.trx_id, self.amount
+        )
     }
 }
