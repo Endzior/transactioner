@@ -23,7 +23,7 @@ impl Record
 {
     pub fn default() -> Self
     {
-        Self { record_type: Invalid, client_id: -1, trx_id: -1, amount: None }
+        Self { record_type: RecordType::Invalid, client_id: u16::MAX, trx_id: u16::MAX, amount: None }
     }
 }
 

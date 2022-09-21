@@ -1,3 +1,9 @@
+use csvparser::CSVParser;
+
+mod csvparser;
+mod record;
+
 fn main() {
-    println!("Hello, world!");
+    let parser = CSVParser{};
+    parser.parse_records();
 }
