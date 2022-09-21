@@ -27,7 +27,7 @@ impl CSVParser {
         let mut reader = ReaderBuilder::new().from_path(&input_filename).unwrap();
 
         reader.deserialize::<Record>().for_each(|record| {
-            println!("{}", &record);
+            println!("{}", &record.unwrap());
         });
     }
 }

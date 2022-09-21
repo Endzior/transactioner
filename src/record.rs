@@ -1,6 +1,7 @@
-
+use serde::Deserialize;
 
 #[derive(Deserialize)]
+#[serde(rename_all = "lowercase")]
 enum RecordType
 {
     Deposit,
@@ -15,9 +16,13 @@ enum RecordType
 #[derive(Deserialize)]
 pub struct Record
 {
+    #[serde(rename = "type")]
     record_type: RecordType,
+    #[serde(rename = "client")]
     client_id: u16,
+    #[serde(rename = "tx")]
     trx_id: u16,
+    #[serde(rename = "amount")]
     amount: Option<f64>
 }
 
