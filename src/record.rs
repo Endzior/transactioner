@@ -9,7 +9,9 @@ pub enum RecordType
     Dispute,
     Resolve,
     Chargeback,
+    #[serde(skip_deserializing)]
     Invalid,
+    #[serde(skip_deserializing)]
     Finished
 }
 

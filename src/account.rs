@@ -358,4 +358,33 @@ mod tests
             assert!(account.locked);
         }
     }
+
+    #[test]
+    fn process_deposit_with_none_amount()
+    {
+        let (_, mut account, mut record) = setup(RecordType::Deposit);
+        record.amount = None;
+
+        account.process(record);
+
+        assert!(account.transactions.is_empty());
+        assert!(account.disputes.is_empty());
+
+        assert_eq!(0., account.available);
+    }
+
+    #[test]
+    fn process_withdrawal_with_none_amount()
+    {
+        let (amount, mut account, mut record) = setup(RecordType::Withdrawal);
+        account.available = amount;
+        record.amount = None;
+
+        account.process(record);
+
+        assert!(account.transactions.is_empty());
+        assert!(account.disputes.is_empty());
+
+        assert_eq!(amount, account.available);
+    }
 }
