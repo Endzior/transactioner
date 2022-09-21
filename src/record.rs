@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Deserialize, PartialEq)]
+#[derive(Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
 pub enum RecordType
 {

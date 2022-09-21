@@ -20,7 +20,7 @@ impl std::fmt::Display for Account {
 impl Account {
     pub fn new(id: u16) -> Self
     {
-        Self { id: id, available: 0., held: 0., locked: false, transactions: HashMap::<u16, Record>::new(), disputes: HashMap::<u16, Record>::new() }
+        Self { id, available: 0., held: 0., locked: false, transactions: HashMap::<u16, Record>::new(), disputes: HashMap::<u16, Record>::new() }
     }
 
     fn total(&self) -> f64
@@ -78,14 +78,13 @@ impl Account {
 
     fn withdrawal(&mut self, record: &Record) -> bool
     {
-        let log_header = "Account::deposit";
+        let log_header = "Account::withdrawal";
         if record.amount.is_none()
         {
             log::debug!("{}: amount in record is None, skipping", log_header);
             return false
         }
 
-        let log_header = "Account::withdrawal";
         let amount = record.amount.unwrap();
         if self.available - amount < 0.
         {

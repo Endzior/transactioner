@@ -45,7 +45,7 @@ impl Calculator
         log::debug!("{}: got a new record to calculate, record == {}", log_header, &record);
         let client_id = record.client_id;
         log::debug!("{}: calling process for the account from the map, record == {}", log_header, &record);
-        self.accounts.entry(client_id).or_insert(Account::new(client_id)).process(record);
+        self.accounts.entry(client_id).or_insert_with(|| Account::new(client_id)).process(record);
 
     }
 
@@ -53,9 +53,9 @@ impl Calculator
     {
         self.print_header();
 
-        for (_key, account) in &self.accounts
+        for account in self.accounts.values()
         {
-            println!("{}", &account);
+            println!("{}", account);
         }
     }
 
