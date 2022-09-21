@@ -11,7 +11,7 @@ mod csvparser;
 mod record;
 
 fn main() {
-    env_logger::Builder::from_env(Env::default().default_filter_or("debug")).init();
+    env_logger::Builder::from_env(Env::default().default_filter_or("warn")).init();
     let log_header = "main";
 
     let (sender, receiver) = channel::<Record>();
