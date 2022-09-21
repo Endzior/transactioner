@@ -17,8 +17,6 @@ impl Calculator
 
     pub fn calculate(&mut self, record: Record)
     {
-        println!("{}", &record);
-
         if record.record_type == RecordType::Finished
         {
             return self.finish();
@@ -32,6 +30,11 @@ impl Calculator
     fn finish(&self)
     {
         self.print_header();
+
+        for (_key, account) in &self.accounts
+        {
+            println!("{}", &account);
+        }
     }
 
     fn print_header(&self)
