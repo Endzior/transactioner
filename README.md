@@ -1,7 +1,10 @@
 # Transactioner
 
-This repository contains an assignment solution by one of the companies. This readme will contain some random bits and assumptions regarding the small app I will write here.
+This repository contains a solution to an assignment given by one of the companies. This readme will contain some random bits and assumptions regarding the small app I wrote in this repo
 
+## env_logger
+
+Make sure RUST_LOG is not equal to debug or lower, that might pollute the output in the final binary. If it is not set - the default will be taken which is currently `warn`.
 
 ## Dispute can only occur on Deposit transactions
 
