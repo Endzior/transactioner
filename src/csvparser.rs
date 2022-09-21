@@ -2,12 +2,18 @@ use std::env;
 
 use csv::ReaderBuilder;
 
-use crate::record::Record;
+use crate::{record::{Record, RecordType}, calculator::Calculator};
 
 pub struct CSVParser {
+    calculator: Calculator
 }
 
 impl CSVParser {
+    pub fn default() -> Self
+    {
+        Self { calculator: Calculator {}}
+    }
+
     fn read_filename_from_args(&self) -> String
     {
         let args: Vec<String> = env::args().collect();
@@ -27,7 +33,13 @@ impl CSVParser {
         let mut reader = ReaderBuilder::new().from_path(&input_filename).unwrap();
 
         reader.deserialize::<Record>().for_each(|record| {
-            println!("{}", &record.unwrap());
+            self.calculator.calculate(record.unwrap());
         });
+
+
+        let mut finish_record = Record::default();
+        finish_record.record_type = RecordType::Finished;
+
+        self.calculator.calculate(finish_record);
     }
 }
