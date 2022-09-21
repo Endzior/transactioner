@@ -1,17 +1,17 @@
-use std::env;
+use std::{env, sync::mpsc::Sender};
 
 use csv::{ReaderBuilder, Trim};
 
-use crate::{record::{Record, RecordType}, calculator::Calculator};
+use crate::record::{Record, RecordType};
 
 pub struct CSVParser {
-    calculator: Calculator
+    sender: Sender<Record>
 }
 
 impl CSVParser {
-    pub fn default() -> Self
+    pub fn new(sender: Sender<Record>) -> Self
     {
-        Self { calculator: Calculator::default() }
+        Self { sender: sender }
     }
 
     fn read_filename_from_args(&self) -> String
@@ -35,7 +35,7 @@ impl CSVParser {
         reader.deserialize::<Record>().for_each(|record| {
             if !record.is_err()
             {
-                self.calculator.calculate(record.unwrap());
+                self.sender.send(record.unwrap()).unwrap();
             }
         });
 
@@ -43,6 +43,6 @@ impl CSVParser {
         let mut finish_record = Record::default();
         finish_record.record_type = RecordType::Finished;
 
-        self.calculator.calculate(finish_record);
+        self.sender.send(finish_record).unwrap();
     }
 }
